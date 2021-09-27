@@ -1,7 +1,7 @@
-USAGE = "Usage: pnm-copy.rb file"
+USAGE = "Usage: pnm-copy.rb file transform"
 abort USAGE  unless ARGV.size == 2
 
-require_relative "pnm_converter"
+require_relative "00pnm_converter"
 
 converter = PNMConverter.new
 
@@ -25,5 +25,8 @@ when "vh"
 when "i"
     new_image = converter.invert(image)
     outfile = "#{name}-invert"
+when "r"
+    new_image = converter.rotate(image)
+    outfile = "#{name}-rotate"
 end
 new_image.write(outfile, add_extension: true, encoding: :ascii)
