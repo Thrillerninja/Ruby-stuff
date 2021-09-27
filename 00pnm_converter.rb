@@ -59,9 +59,29 @@ class PNMConverter
 
     output = image.pixels.map do |row|
       row.map do |pixel|
+        if pixel.is_a? Array           
+          pixel.map do |color|
+            maxgray - color 
+          end
+        else 
           maxgray - pixel
+        end
       end
     end
     finish = PNM.create(output)
   end
+
+  def rotate(image)
+    output = []
+
+    0.upto(image.width - 1) do |n|
+        row = []
+        1.upto(image.pixels.length) do |m|
+            row << image.pixels[image.pixels.length - m][n]
+        end
+        output << row
+    end
+    finish = PNM.create(output)
+  end
+
 end
