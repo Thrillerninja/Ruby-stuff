@@ -84,4 +84,81 @@ class PNMConverter
     finish = PNM.create(output)
   end
 
+  # Returns a histogram for a grayscale image.
+  def histogram(image)
+    raise "Image must be PGM"  unless image.type == :pgm
+
+    maxgray = image.maxgray
+
+    frequencies = Array.new(maxgray + 1, 0)
+    image.pixels.flatten.each {|value| frequencies[value] += 1 }
+
+    maxval = frequencies.max
+
+    pixels = []
+    height = 100
+
+    # create pixel array for horizontal bar chart
+    frequencies.each do |frequency|
+      length = (frequency * height.to_f / maxval).round
+      pixels << Array.new(length, 1) + Array.new(height - length, 0)
+    end
+
+    pixels = pixels.transpose.reverse  # rotate counterclockwise
+
+    finish = PNM.create(pixels, type: :pbm)
+  end
+
+  # Returns a normalized copy of the image.
+  def normalize(image)
+    raise "Image must be PGM"  unless image.type == :pgm
+
+    type = image.type
+    new_maxgray = 255
+
+    min, max = image.pixels.flatten.minmax
+    factor = new_maxgray.to_f / (max - min)
+
+    pixels = image.pixels.map do |row|
+               row.map do |pixel|
+                 if pixel.is_a?(Array)
+                   pixel.map {|color| ((color - min) * factor).round }
+                 else
+                   ((pixel - min) * factor).round
+                 end
+               end
+             end
+
+    finish = PNM.create(pixels, type: type, maxgray: new_maxgray)
+  end 
+
+  def decode(image)
+    maxgray = image.maxgray
+
+    output = image.pixels.map do |row|
+        row.map do |pixel|
+            if pixel.even?
+                pixel = 0
+            else 
+                pixel = 1
+            end
+        end
+    end
+    finish = PNM.create(output)
+  end
+
+  def decode(image)
+    maxgray = image.maxgray
+
+    output = image.pixels.map do |row|
+        row.map do |pixel|
+            if pixel.even?
+                pixel = pixel
+            else 
+                pixel = pixel+1
+            end
+        end
+    end
+   finish = PNM.create(output)
+end
 end

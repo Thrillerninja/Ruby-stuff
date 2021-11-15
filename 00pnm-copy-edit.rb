@@ -28,5 +28,17 @@ when "i"
 when "r"
     new_image = converter.rotate(image)
     outfile = "#{name}-rotate"
+when "his"
+    new_image = converter.histogram(image)
+    outfile = "#{name}-histogram"
+when "norm"
+    new_image = converter.normalize(image)
+    outfile = "#{name}-normalize"
+when "dec"
+    new_image = converter.decode(image)
+    outfile = "#{name}-decode"
+when "enc"
+    new_image = converter.encode(image)
+    outfile = "#{name}-encode"
 end
 new_image.write(outfile, add_extension: true, encoding: :ascii)
