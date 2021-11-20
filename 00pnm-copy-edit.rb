@@ -28,6 +28,9 @@ when "i"
 when "r"
     new_image = converter.rotate(image)
     outfile = "#{name}-rotate"
+when "r2"
+    new_image = converter.rotate2(image)
+    outfile = "#{name}-rotate2"
 when "his"
     new_image = converter.histogram(image)
     outfile = "#{name}-histogram"

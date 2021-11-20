@@ -73,7 +73,6 @@ class PNMConverter
 
   def rotate(image)
     output = []
-
     0.upto(image.width - 1) do |n|
         row = []
         1.upto(image.pixels.length) do |m|
@@ -82,6 +81,10 @@ class PNMConverter
         output << row
     end
     finish = PNM.create(output)
+  end
+
+  def rotate2(image)
+    finish = PNM.create(image.pixels.reverse.transpose)
   end
 
   # Returns a histogram for a grayscale image.
@@ -108,29 +111,6 @@ class PNMConverter
 
     finish = PNM.create(pixels, type: :pbm)
   end
-
-  # Returns a normalized copy of the image.
-  def normalize(image)
-    raise "Image must be PGM"  unless image.type == :pgm
-
-    type = image.type
-    new_maxgray = 255
-
-    min, max = image.pixels.flatten.minmax
-    factor = new_maxgray.to_f / (max - min)
-
-    pixels = image.pixels.map do |row|
-               row.map do |pixel|
-                 if pixel.is_a?(Array)
-                   pixel.map {|color| ((color - min) * factor).round }
-                 else
-                   ((pixel - min) * factor).round
-                 end
-               end
-             end
-
-    finish = PNM.create(pixels, type: type, maxgray: new_maxgray)
-  end 
 
   def decode(image)
     maxgray = image.maxgray
